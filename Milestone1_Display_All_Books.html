@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Milestone 1 - All Books Display</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 30px;
+      text-align: center;
+    }
+
+    h1 {
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 0 auto 30px auto;
+    }
+
+    .book-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .book {
+      background-color: white;
+      border-radius: 10px;
+      width: 250px;
+      padding: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    .book img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .book h3 {
+      font-size: 18px;
+      margin: 10px 0 5px 0;
+    }
+
+    .book p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Milestone 1: Display All Books</h1>
+  <div class="book-list" id="book-list"></div>
+
+  <p><a href="MileStone 1_Home.html"> Homepage </a></p>
+
+  <script>
+    $(document).ready(function () {
+      $.getJSON("google-books-search.json", function(data) {
+        const books = data.items;
+        let html = "";
+
+        books.forEach(book => {
+          const info = book.volumeInfo;
+          const title = info.title || "No Title";
+          const authors = info.authors ? info.authors.join(", ") : "Unknown Author";
+          const publisher = info.publisher || "Unknown Publisher";
+          const img = info.imageLinks ? info.imageLinks.thumbnail : "https://via.placeholder.com/128x180?text=No+Image";
+
+          html += `
+            <div class="book">
+              <img src="${img}" alt="Book Cover">
+              <h3>${title}</h3>
+              <p><strong>Author:</strong> ${authors}</p>
+              <p><strong>Publisher:</strong> ${publisher}</p>
+            </div>
+          `;
+        });
+
+        $("#book-list").html(html);
+      }).fail(function () {
+        $("#book-list").html("<p>Failed to load book list.</p>");
+      });
+    });
+  </script>
+
+</body>
+</html>
